@@ -13,12 +13,12 @@ def excel_to_dict(file):
     file = xlrd.open_workbook(file)
     xl_sheet = file.sheet_by_index(0)
     num_cols = xl_sheet.ncols   # Number of columns
-    for row_idx in range(0, xl_sheet.nrows):    # Iterate through rows
+    for i in range(1, xl_sheet.nrows):    # Iterate through rows
         row_dict = {}
         for col_idx in range(0, num_cols):  # Iterate through columns
-            cell_obj = xl_sheet.cell(row_idx, col_idx)  # Get cell object by row, col\
+            cell_obj = xl_sheet.cell(i, col_idx)  # Get cell object by row, col\
             row_dict[col_idx] = cell_obj.value
-        file_dict[row_idx] = row_dict
+        file_dict[i] = row_dict
     return file_dict
 
 # def csv_to_dict(file):
@@ -29,14 +29,11 @@ def assign_tutors(students_file, tutor_list):
     counter = 0
     counter2 = 0
     tutors_number = len(tutor_list)
-    student_number = len(info)
+    student_number = len(info) - 1
     students_in_group = student_number/tutors_number
 
     for i in info:
-        if i != 0:
-            # line =  [info[i][x] for x in info[i]]
-            # line[4] = tutor_list[counter2]
-            # print(i, line[4], line[5])
+        if i > 0:
             counter +=1
             info[i][4] = tutor_list[counter2]
             if counter > students_in_group:
@@ -51,26 +48,4 @@ def print_to_console(file_name):
     instance = assign_tutors(file_name, tutor_list)
     for i in instance:
         line =  [instance[i][x] for x in instance[i]]
-        print(line[1], line[2], line[4], line[5])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        print(i, "    ",line[1], line[2], line[4], line[5])
