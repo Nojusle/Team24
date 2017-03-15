@@ -33,12 +33,11 @@ def assign_tutors(students_file, tutor_list):
     students_in_group = student_number/tutors_number
 
     for i in info:
-        if i > 0:
-            counter +=1
-            info[i][4] = tutor_list[counter2]
-            if counter > students_in_group:
-                counter = 0
-                counter2 +=1
+        counter +=1
+        info[i][4] = tutor_list[counter2]
+        if counter > students_in_group:
+            counter = 0
+            counter2 +=1
     return info
     
 
