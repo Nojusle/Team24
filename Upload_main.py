@@ -653,6 +653,10 @@ class Upluad_main(Frame):
         self.clear_button = ttk.Button(root, text="Remove", command=lambda: self.clear_student())
         self.clear_button.grid(row=14, column=4, pady=10,sticky=W)
 
+        #-------- 18th row -------------
+
+        self.clear_button = ttk.Button(root, text="Notify Students", command=lambda: self.send_tutor_email()) 
+        self.clear_button.grid(row=18, column=2, columnspan=2, sticky=W+E)
 
         #-------- 20th row -------------
 
