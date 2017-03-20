@@ -12,6 +12,7 @@ from tkinter import ttk
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from xlwt import Workbook
 import sqlite3
  
  
@@ -444,8 +445,8 @@ class Upluad_main(Frame):
         self.query_tutors_database() 
         self.list_box2.delete(0, END)
 
-        # dictionaty = {}
-# goes throw list of tutors and gets student number assgint to each of them, then combines it to sting and outputs to tutors list box
+        # dictionary = {}
+# goes through list of tutors and gets student number assgined to each of them, then combines it to sting and outputs to tutors list box
         for i, item in enumerate(self.tutor_list):
             try:
                 result = self.theCursor.execute("SELECT count(*) FROM Students WHERE TUTOR LIKE '" + item + "';" )
@@ -453,8 +454,8 @@ class Upluad_main(Frame):
                     quota = row[0]
 
 
-                    string = (item + '   strudents quota:  ' + str(quota))
-                # dictionaty[i] = [item, quota]
+                    string = (item + '   students quota:  ' + str(quota))
+                # dictionary[i] = [item, quota]
                 self.list_box2.insert(END, string)
 
 
@@ -536,6 +537,29 @@ class Upluad_main(Frame):
             self.show_tutor_students(self.temp_var)
         else:
             self.update_listbox()
+
+#exporting xls that has names of all tutors with their tutees
+    def export_assigned_xls(self):
+        book = Workbook()
+        sheet1 = book.add_sheet('Assigned Groups')
+        x = 0
+        for item in self.tutor_list:
+            try:
+                temp_students = self.theCursor.execute("SELECT * FROM Students WHERE TUTOR LIKE '" + item + "';")
+
+            except sqlite3.OperationalError:
+                print("The Table Doesn't Exist")
+            except:
+                print("1: Couldn't Retrieve Data From Database")
+            sheet1.row(x).write(0, item)
+            x += 1
+            for i in temp_students:
+                sheet1.row(x).write(0, str(i))
+                x += 1
+            x += 1 #adds space between last tutee and next tutor
+
+        filename = filedialog.asksaveasfilename(defaultextension=".xls")
+        book.save(filename)
 
 
     def display(self):
@@ -652,6 +676,11 @@ class Upluad_main(Frame):
 
         self.clear_button = ttk.Button(root, text="Remove", command=lambda: self.clear_student())
         self.clear_button.grid(row=14, column=4, pady=10,sticky=W)
+
+        #-------- 16th row -------------
+
+        self.clear_button = ttk.Button(root, text="Export XLS", command=lambda: self.export_assigned_xls()) 
+        self.clear_button.grid(row=16, column=2, columnspan=2, sticky=W+E)
 
         #-------- 18th row -------------
 
