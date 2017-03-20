@@ -1,10 +1,13 @@
 # Team24
 ————— Nojus —————
 
-You must install xlrd package
+You must install xlrd and xlwt packages
 
 enter into your terminal
 pip install xlrd
+
+and if you succeed enter:
+pip install xlwt
 
 if you get an error, you probably don’t have pip
 then, google how to install it
