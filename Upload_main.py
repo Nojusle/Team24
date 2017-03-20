@@ -4,10 +4,16 @@ TEAM 24
 '''
 from tkinter import *
 from uploads import *
+from tkinter import messagebox as tkMessageBox
 import xlrd
+import smtplib 
 from tkinter import filedialog
 from tkinter import ttk
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import sqlite3
+ 
  
 
 class Upluad_main(Frame):
@@ -67,6 +73,39 @@ class Upluad_main(Frame):
         self.setup_db()
         self.update_listbox()
         self.update_tutor_listbox()
+      
+    def getemails(self, tutorname): 
+        self.theCursor.execute("SELECT UEmail FROM Students WHERE TUTOR = '{}'".format(tutorname[0]))
+        
+        return self.theCursor.fetchall()
+
+    def send_tutor_email(self):
+        self.theCursor.execute("SELECT TUTOR FROM Students") 
+        tutor_list = self.theCursor.fetchall()
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls() 
+        for i in tutor_list:
+            
+            server.login('dqscoursework@gmail.com', 'team24coursework')
+            
+            me = "dqscoursework@gmail.com"
+            emails = self.getemails(i)
+
+            # Create the container (outer) email message.
+            msg = MIMEMultipart()
+            msg = MIMEText("""Dear Student: Your tutor for the year is {}""".format(i[0]))
+            msg['Subject'] = 'Testing the Email - Python'
+            # me == the sender's email address
+            # emails = the list of all recipients' email addresses
+            msg['From'] = me
+            msg['To'] = '\n'.join(''.join(elems) for elems in emails)
+            msg.preamble = 'Your Tutor'
+
+            
+
+            server.sendmail(me, emails, msg.as_string()) 
+
+        server.quit()  
 
     # ------------------------------------ Search ------------------------------------
 #gets value from user and with it calls show_studets function
@@ -503,35 +542,28 @@ class Upluad_main(Frame):
 
         # ----- 0 Row -----
 
-        title = Label(root, text="Personal Tutor \n Managment System", font=('MS', 20,'bold'))
-        title.grid(row=0, rowspan=3, column=5, sticky=S)
-        # ----- 1rd Row -----
+        title = Label(root, text="Personal Tutor Management System", font=('MS', 20,'bold'))
+        title.grid(row=0, rowspan=1, column=5, sticky=S)
+
+        # ----- 3rd Row -----
 
         self.upload_button = ttk.Button(root, text="Upload Students", command=lambda: self.stud_upload(self.tutor_list))
-        self.upload_button.grid(row=1, column=0, columnspan=2, sticky=E+W, padx=(10, 0))
-
-        # ------- 2nd Row -------------
+        self.upload_button.grid(row=3, column=0, columnspan=2, sticky=E+W, pady=(20,0), padx=(10, 0))
 
         self.upload_tutors_button = ttk.Button(root, text="Upload Tutors", command=lambda: self.tutors_upload())
-        self.upload_tutors_button.grid(row=2, column=0, columnspan=2, sticky=E+W, pady=(10,0), padx=(10, 0))
-
-        # ------- 3rd Row ---------------
+        self.upload_tutors_button.grid(row=3, column=2, columnspan=2, sticky=E+W, pady=(20,0), padx=(10, 0))
 
         self.upload_button = ttk.Button(root, text="Assign", command=lambda: self.assign_students())
-        self.upload_button.grid(row=3, column=0, columnspan=2, sticky=E+W, pady=(1, 60), padx=(10, 0))
-
-
-        # ----- 5st Row ----- 
+        self.upload_button.grid(row=3, column=4, columnspan=1, sticky=E+W, pady=(20, 0), padx=(10, 0)) 
 
         self.search_entry_value = StringVar(root, value="")
         self.search_entry = ttk.Entry(root, textvariable=self.search_entry_value)
-        self.search_entry.grid(row=5, column=5, columnspan=4, padx=(50, 0), sticky=W+E)
+        self.search_entry.grid(row=3, column=5, columnspan=3, padx=(50, 0), pady=(20, 0), sticky=W+E)
 
         self.seach_button = ttk.Button(root, text="Search", command=lambda: self.search_student())
-        self.seach_button.grid(row=5, column=9, sticky=W)
-
-
-        # ----- 6st Row ----- 
+        self.seach_button.grid(row=3, column=8, pady=(20, 0), sticky=W)
+        
+         # ----- 6th Row ----- 
 
         SCode_label = Label(root, text="Student Code")
         SCode_label.grid(row=6, column=0, columnspan=2, padx=10, pady=10, sticky=W)
@@ -540,7 +572,7 @@ class Upluad_main(Frame):
         self.fn_entry = ttk.Entry(root, textvariable=self.fn_entry_value)
         self.fn_entry.grid(row=6, column=2, columnspan=3, sticky=W+E)
 
-        # ----- 7nd Row -----
+        # ----- 7th Row -----
 
         Surname_label = Label(root, text="Surname")
         Surname_label.grid(row=7, column=0, columnspan=2, padx=10, pady=10, sticky=W)
@@ -550,7 +582,7 @@ class Upluad_main(Frame):
                                   textvariable=self.ln_entry_value)
         self.ln_entry.grid(row=7, column=2,columnspan=3, sticky=W+E)
 
-        # ----- 8nd Row -----
+        # ----- 8th Row -----
 
         Forename1_label = Label(root, text="Forename1")
         Forename1_label.grid(row=8, column=0, columnspan=2, padx=10, pady=10, sticky=W)
@@ -560,7 +592,7 @@ class Upluad_main(Frame):
                                   textvariable=self.f1_entry_value)
         self.f1_entry.grid(row=8, column=2, columnspan=3, sticky=W+E)
 
-        # ----- 9nd Row -----
+        # ----- 9th Row -----
 
         forename2_label = Label(root, text="Forename2")
         forename2_label.grid(row=9, column=0, columnspan=2, padx=10, pady=10, sticky=W)
@@ -570,7 +602,7 @@ class Upluad_main(Frame):
                                   textvariable=self.f2_entry_value)
         self.f2_entry.grid(row=9, column=2, columnspan=3, sticky=W+E)
 
-        # ----- 10nd Row -----
+        # ----- 10th Row -----
 
         Tutor_label = Label(root, text="Tutor")
         Tutor_label.grid(row=10, column=0, columnspan=2, padx=10, pady=10, sticky=W)
@@ -580,7 +612,7 @@ class Upluad_main(Frame):
                                   textvariable=self.tu_entry_value)
         self.tu_entry.grid(row=10, column=2, columnspan=3, sticky=W+E)
 
-        # ----- 11nd Row -----
+        # ----- 11th Row -----
 
         course_label = Label(root, text="Course Code")
         course_label.grid(row=11, column=0, columnspan=2, padx=10, pady=10, sticky=W)
@@ -590,7 +622,7 @@ class Upluad_main(Frame):
                                   textvariable=self.co_entry_value)
         self.co_entry.grid(row=11, column=2, columnspan=3, sticky=W+E)
 
-        # ----- 12nd Row -----
+        # ----- 12th Row -----
 
         academic_year_label = Label(root, text="Academic year")
         academic_year_label.grid(row=12, column=0, columnspan=2, padx=10, pady=10, sticky=W)
@@ -600,7 +632,7 @@ class Upluad_main(Frame):
         self.ay_entry = ttk.Entry(root, textvariable=self.ay_entry_value)
         self.ay_entry.grid(row=12, column=2, columnspan=3, sticky=W+E)
 
-         # ----- 13nd Row -----
+         # ----- 13th Row -----
 
         uni_email_label = Label(root, text="University Email")
         uni_email_label.grid(row=13, column=0, columnspan=2, padx=10, pady=10, sticky=W)
@@ -610,7 +642,7 @@ class Upluad_main(Frame):
                                   textvariable=self.ue_entry_value)
         self.ue_entry.grid(row=13, column=2, columnspan=3, sticky=W+E)
 
-        # ----- 14rd Row -----
+        # ----- 14th Row -----
 
         self.submit_button = ttk.Button(root, text="Add", command=lambda: self.stud_add())
         self.submit_button.grid(row=14, column=2, sticky=E, pady=10)
@@ -622,18 +654,20 @@ class Upluad_main(Frame):
         self.clear_button.grid(row=14, column=4, pady=10,sticky=W)
 
 
+        #-------- 20th row -------------
+
+        self.clear_button = ttk.Button(root, text="Delete Student Database", command=lambda: self.delete_database() if tkMessageBox.askquestion("Confirmation", "Are You Sure?", icon='warning') == "yes" else tkMessageBox.showinfo("Deleting Student Database", "Nothing was Deleted")) 
+        self.clear_button.grid(row=20, column=2, columnspan=2, sticky=W+E)
+
+        #-------- 21st row -------------
+
+        self.clear2_button = ttk.Button(root, text="Delete Tutor Database", command=lambda: self.delete_database_tutors() if tkMessageBox.askquestion("Confirmation", "Are You Sure?", icon='warning') == "yes" else tkMessageBox.showinfo("Deleting Tutor Database", "Nothing was Deleted"))
+        self.clear2_button.grid(row=21, column=2, columnspan=2, sticky=W+E)
+
         #-------- 22nd row -------------
 
-        self.clear_button = ttk.Button(root, text="Delete Student Database", command=lambda: self.delete_database())
-        self.clear_button.grid(row=22, column=0, columnspan=2)
-
         self.save_button = ttk.Button(root, text="Save", command=lambda: self.db_conn.commit())
-        self.save_button.grid(row=22, column=11, sticky=W)
-
-        #--------- 23st row ------------
-
-        self.clear2_button = ttk.Button(root, text="Delete Tutors Database", command=lambda: self.delete_database_tutors())
-        self.clear2_button.grid(row=23, column=0, columnspan=2, sticky=W+E)
+        self.save_button.grid(row=22, column=10, sticky=W)        
 
 
     def __init__(self, master):
@@ -644,10 +678,10 @@ class Upluad_main(Frame):
         self.list_box.grid(row=6, rowspan=10, column=5, columnspan=8, ipadx=250, padx=50, pady=10, sticky=E+W+N+S)
 
         self.refresh_all = ttk.Button(root, text="Show All", command=lambda: self.update_listbox())
-        self.refresh_all.grid(row=5, column=10, sticky=E)
+        self.refresh_all.grid(row=3, column=9, pady=(20, 0), sticky=E)
 
         self.refresh_all = ttk.Button(root, text="Refresh", command=lambda: self.refresh_stuent_list())
-        self.refresh_all.grid(row=5, column=11, sticky=W)
+        self.refresh_all.grid(row=3, column=10, pady=(20, 0), sticky=W)
 
         
 
@@ -660,8 +694,8 @@ class Upluad_main(Frame):
         self.list_box2.grid(row=16, rowspan=6, column=5, columnspan=8, ipadx=250, padx=50, pady=10, sticky=E+W+N+S)
 
 
-        root.title("Uplaod students")
-        root.geometry("1300x800")
+        root.title("Upload students")
+        root.geometry("1120x720")
 
         # Call for database to be created
         self.setup_db()
@@ -674,6 +708,6 @@ class Upluad_main(Frame):
 
 
 root = Tk()
-root.title("Personal Tutor Managment System Team 24")
+root.title("Personal Tutor Management System Team 24")
 app = Upluad_main(root)
 root.mainloop()
