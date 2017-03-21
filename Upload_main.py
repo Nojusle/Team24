@@ -115,7 +115,7 @@ class Upluad_main(Frame):
         email_dict = {} 
         for i in tutor_list: 
         	emails_list = self.getemails(i)
-        	email_string = ''.join(''.join(elems) for elems in emails_list)
+        	email_string = ', '.join(''.join(elems) for elems in emails_list)
         	email_dict[i] = email_string
 
         t = Thread(target=self.send_tutor_email)
