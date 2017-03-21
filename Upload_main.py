@@ -94,7 +94,6 @@ class Upluad_main(Frame):
             emails = value 
             print(emails)
             # Create the container (outer) email message.
-            msg = MIMEMultipart()
             msg = MIMEText("""Dear Student: Your tutor for the year is {}""".format(key[0]))
             msg['Subject'] = 'Testing the Email - Python'
             # me == the sender's email address
@@ -116,7 +115,7 @@ class Upluad_main(Frame):
         email_dict = {} 
         for i in tutor_list: 
         	emails_list = self.getemails(i)
-        	email_string = '\n'.join(''.join(elems) for elems in emails_list)
+        	email_string = ''.join(''.join(elems) for elems in emails_list)
         	email_dict[i] = email_string
 
         t = Thread(target=self.send_tutor_email)
