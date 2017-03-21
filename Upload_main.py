@@ -551,11 +551,19 @@ class Upluad_main(Frame):
                 print("The Table Doesn't Exist")
             except:
                 print("1: Couldn't Retrieve Data From Database")
+
             sheet1.row(x).write(0, item)
             x += 1
+
             for i in temp_students:
-                sheet1.row(x).write(0, str(i))
+                for j in range(0,8):
+                    if j >= 5:
+                        #skipping displaying the name of tutor assigned
+                        sheet1.row(x).write((j), str(i[(j+1)]))
+                    else:
+                        sheet1.row(x).write(j, str(i[j]))
                 x += 1
+
             x += 1 #adds space between last tutee and next tutor
 
         filename = filedialog.asksaveasfilename(defaultextension=".xls")
