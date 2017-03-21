@@ -13,6 +13,7 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from xlwt import Workbook
+from threading import Thread 
 import sqlite3
  
  
@@ -74,32 +75,32 @@ class Upluad_main(Frame):
         self.setup_db()
         self.update_listbox()
         self.update_tutor_listbox()
-      
+     
+     
     def getemails(self, tutorname): 
         self.theCursor.execute("SELECT UEmail FROM Students WHERE TUTOR = '{}'".format(tutorname[0]))
         
         return self.theCursor.fetchall()
 
     def send_tutor_email(self):
-        self.theCursor.execute("SELECT TUTOR FROM Students") 
-        tutor_list = self.theCursor.fetchall()
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls() 
-        for i in tutor_list:
+        for key, value in email_dict.items():
             
             server.login('dqscoursework@gmail.com', 'team24coursework')
             
             me = "dqscoursework@gmail.com"
-            emails = self.getemails(i)
-
+            #emails = self.getemails(i)
+            emails = value 
+            print(emails)
             # Create the container (outer) email message.
             msg = MIMEMultipart()
-            msg = MIMEText("""Dear Student: Your tutor for the year is {}""".format(i[0]))
+            msg = MIMEText("""Dear Student: Your tutor for the year is {}""".format(key[0]))
             msg['Subject'] = 'Testing the Email - Python'
             # me == the sender's email address
             # emails = the list of all recipients' email addresses
             msg['From'] = me
-            msg['To'] = '\n'.join(''.join(elems) for elems in emails)
+            msg['To'] = emails
             msg.preamble = 'Your Tutor'
 
             
@@ -107,6 +108,19 @@ class Upluad_main(Frame):
             server.sendmail(me, emails, msg.as_string()) 
 
         server.quit()  
+
+    def getSendEmails(self): 
+        self.theCursor.execute("SELECT TUTOR FROM Students") 
+        tutor_list = self.theCursor.fetchall()
+        global email_dict 
+        email_dict = {} 
+        for i in tutor_list: 
+        	emails_list = self.getemails(i)
+        	email_string = '\n'.join(''.join(elems) for elems in emails_list)
+        	email_dict[i] = email_string
+
+        t = Thread(target=self.send_tutor_email)
+        t.start()   
 
     # ------------------------------------ Search ------------------------------------
 #gets value from user and with it calls show_studets function
@@ -692,7 +706,7 @@ class Upluad_main(Frame):
 
         #-------- 18th row -------------
 
-        self.clear_button = ttk.Button(root, text="Notify Students", command=lambda: self.send_tutor_email()) 
+        self.clear_button = ttk.Button(root, text="Notify Students", command=lambda: self.getSendEmails()) 
         self.clear_button.grid(row=18, column=2, columnspan=2, sticky=W+E)
 
         #-------- 20th row -------------
