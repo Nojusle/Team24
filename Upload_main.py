@@ -593,13 +593,13 @@ class Upluad_main(Frame):
         # ----- 3rd Row -----
 
         self.upload_button = ttk.Button(root, text="Upload Students", command=lambda: self.stud_upload(self.tutor_list))
-        self.upload_button.grid(row=3, column=0, columnspan=2, sticky=E+W, pady=(20,0), padx=(10, 0))
+        self.upload_button.grid(row=3, column=0, columnspan=2, pady=(20, 0), sticky=E)
 
         self.upload_tutors_button = ttk.Button(root, text="Upload Tutors", command=lambda: self.tutors_upload())
-        self.upload_tutors_button.grid(row=3, column=2, columnspan=2, sticky=E+W, pady=(20,0), padx=(10, 0))
+        self.upload_tutors_button.grid(row=3, column=2, pady=(20, 0), columnspan=2, sticky=E+W)
 
         self.upload_button = ttk.Button(root, text="Assign", command=lambda: self.assign_students())
-        self.upload_button.grid(row=3, column=4, columnspan=1, sticky=E+W, pady=(20, 0), padx=(10, 0)) 
+        self.upload_button.grid(row=3, column=4, columnspan=1, pady=(20, 0), sticky=E+W) 
 
         self.search_entry_value = StringVar(root, value="")
         self.search_entry = ttk.Entry(root, textvariable=self.search_entry_value)
@@ -698,30 +698,29 @@ class Upluad_main(Frame):
         self.clear_button = ttk.Button(root, text="Remove", command=lambda: self.clear_student())
         self.clear_button.grid(row=14, column=4, pady=10,sticky=W)
 
-        #-------- 16th row -------------
-
-        self.clear_button = ttk.Button(root, text="Export XLS", command=lambda: self.export_assigned_xls()) 
-        self.clear_button.grid(row=16, column=2, columnspan=2, sticky=W+E)
-
-        #-------- 18th row -------------
-
-        self.clear_button = ttk.Button(root, text="Notify Students", command=lambda: self.getSendEmails()) 
-        self.clear_button.grid(row=18, column=2, columnspan=2, sticky=W+E)
 
         #-------- 20th row -------------
 
         self.clear_button = ttk.Button(root, text="Delete Student Database", command=lambda: self.delete_database() if tkMessageBox.askquestion("Confirmation", "Are You Sure?", icon='warning') == "yes" else tkMessageBox.showinfo("Deleting Student Database", "Nothing was Deleted")) 
-        self.clear_button.grid(row=20, column=2, columnspan=2, sticky=W+E)
+        self.clear_button.grid(row=21, column=0, columnspan=2, sticky=W+E)
 
-        #-------- 21st row -------------
+        #-------- 22st row -------------
+
 
         self.clear2_button = ttk.Button(root, text="Delete Tutor Database", command=lambda: self.delete_database_tutors() if tkMessageBox.askquestion("Confirmation", "Are You Sure?", icon='warning') == "yes" else tkMessageBox.showinfo("Deleting Tutor Database", "Nothing was Deleted"))
-        self.clear2_button.grid(row=21, column=2, columnspan=2, sticky=W+E)
+        self.clear2_button.grid(row=22, column=0, columnspan=2, sticky=W+E)
 
-        #-------- 22nd row -------------
 
         self.save_button = ttk.Button(root, text="Save", command=lambda: self.db_conn.commit())
-        self.save_button.grid(row=22, column=10, sticky=W)        
+        self.save_button.grid(row=22, column=10, sticky=W)
+
+
+        self.clear_button = ttk.Button(root, text="Export XLS", command=lambda: self.export_assigned_xls()) 
+        self.clear_button.grid(row=22, column=9, sticky=W)
+
+
+        self.clear_button = ttk.Button(root, text="Notify Students", command=lambda: self.getSendEmails()) 
+        self.clear_button.grid(row=22, column=5, sticky=W, padx=(50, 0))          
 
 
     def __init__(self, master):
