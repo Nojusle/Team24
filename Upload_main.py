@@ -598,15 +598,15 @@ class Upluad_main(Frame):
         self.upload_tutors_button = ttk.Button(root, text="Upload Tutors", command=lambda: self.tutors_upload())
         self.upload_tutors_button.grid(row=3, column=2, pady=(20, 0), columnspan=2, sticky=E+W)
 
-        self.upload_button = ttk.Button(root, text="Assign", command=lambda: self.assign_students())
-        self.upload_button.grid(row=3, column=4, columnspan=1, pady=(20, 0), sticky=E+W) 
+        self.assign_button = ttk.Button(root, text="Assign", command=lambda: self.assign_students())
+        self.assign_button.grid(row=3, column=4, columnspan=1, pady=(20, 0), sticky=E+W) 
 
         self.search_entry_value = StringVar(root, value="")
         self.search_entry = ttk.Entry(root, textvariable=self.search_entry_value)
         self.search_entry.grid(row=3, column=5, columnspan=3, padx=(50, 0), pady=(20, 0), sticky=W+E)
 
-        self.seach_button = ttk.Button(root, text="Search", command=lambda: self.search_student())
-        self.seach_button.grid(row=3, column=8, pady=(20, 0), sticky=W)
+        self.search_button = ttk.Button(root, text="Search", command=lambda: self.search_student())
+        self.search_button.grid(row=3, column=8, pady=(20, 0), sticky=W)
         
          # ----- 6th Row ----- 
 
@@ -715,12 +715,12 @@ class Upluad_main(Frame):
         self.save_button.grid(row=22, column=10, sticky=W)
 
 
-        self.clear_button = ttk.Button(root, text="Export XLS", command=lambda: self.export_assigned_xls()) 
-        self.clear_button.grid(row=22, column=9, sticky=W)
+        self.export_button = ttk.Button(root, text="Export XLS", command=lambda: self.export_assigned_xls()) 
+        self.export_button.grid(row=22, column=9, sticky=W)
 
 
-        self.clear_button = ttk.Button(root, text="Notify Students", command=lambda: self.getSendEmails()) 
-        self.clear_button.grid(row=22, column=5, sticky=W, padx=(50, 0))          
+        self.notify_button = ttk.Button(root, text="Notify Students", command=lambda: self.getSendEmails()) 
+        self.notify_button.grid(row=22, column=5, sticky=W, padx=(50, 0))          
 
 
     def __init__(self, master):
