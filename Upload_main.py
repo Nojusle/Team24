@@ -94,8 +94,8 @@ class Upluad_main(Frame):
             emails = value 
             print(emails)
             # Create the container (outer) email message.
-            msg = MIMEText("""Dear Student: Your tutor for the year is {}""".format(key[0]))
-            msg['Subject'] = 'Testing the Email - Python'
+            msg = MIMEText("""Dear Student: The Personal Tutor assigned for you this year is: {}.""".format(key[0]))
+            msg['Subject'] = 'Your Personal Tutor'
             # me == the sender's email address
             # emails = the list of all recipients' email addresses
             msg['From'] = me
